@@ -2,7 +2,8 @@ import { useTranscribeApplicationContext } from "@/components/contexts/applicati
 import Header from "@/components/ui/header";
 import { Stack, useRouter } from "expo-router";
 import React, { useEffect } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const NoteDetail = () => {
   const router = useRouter();
@@ -38,7 +39,15 @@ const NoteDetail = () => {
         }}
         showDeleteAction
       />
-      <Text>{transcription?.transcription}</Text>
+      <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
+        <ScrollView>
+          <View style={styles.content}>
+            <Text style={styles.transcription}>
+              {transcription?.transcription}
+            </Text>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     </View>
   );
 };
@@ -48,6 +57,21 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  content: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    padding: 60,
+    paddingHorizontal: 20,
+    width: "100%",
+  },
+  transcription: {
+    fontSize: 18,
+    lineHeight: 24,
+    color: "#000",
+    textAlign: "left",
+    width: "100%",
   },
 });
 

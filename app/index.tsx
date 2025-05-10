@@ -1,19 +1,18 @@
 import { useTranscribeApplicationContext } from "@/components/contexts/application-context";
 import { useRouter } from "expo-router";
-import React, { useEffect, useRef } from "react";
-import { Button, StyleSheet, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import Voice from "@react-native-voice/voice";
 import { uniqueId } from "@/components/utils/strings";
+import RecordButton from "@/components/ui/record-button";
+import { ListIcon } from "@/components/icons";
 
 const Index = () => {
   const router = useRouter();
   const { setIsRecording, isRecording, addTranscription } =
     useTranscribeApplicationContext();
   const currentSpeech = useRef<string | null>(null);
-
-  useEffect(() => {
-    console.log(isRecording);
-  }, [isRecording]);
+  const [numberOfWords, setNumberOfWords] = useState(0);
 
   useEffect(() => {
     Voice.onSpeechStart = (e) => {
@@ -26,9 +25,9 @@ const Index = () => {
       console.log("onSpeechError", e);
     };
     Voice.onSpeechResults = (e) => {
-      console.log("onSpeechResults", e.value);
       if (e.value && e.value.length > 0) {
         currentSpeech.current = e.value[0];
+        setNumberOfWords(currentSpeech.current.split(" ").length);
       }
     };
     return () => {
@@ -38,8 +37,9 @@ const Index = () => {
 
   return (
     <View style={styles.wrapper}>
-      <Button
-        title={isRecording ? "Stop" : "Record audio"}
+      <RecordButton
+        isRecording={isRecording}
+        numberOfWords={numberOfWords}
         onPress={async () => {
           if (!isRecording) {
             try {
@@ -63,12 +63,14 @@ const Index = () => {
           }
         }}
       />
-      <Button
-        title="Go to Recordings"
+      <TouchableOpacity
+        style={styles.button}
         onPress={() => {
           router.push("/notes");
         }}
-      />
+      >
+        <ListIcon fill="#fff" />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -76,6 +78,16 @@ const Index = () => {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 10,
+  },
+  button: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "#396CE8",
     justifyContent: "center",
     alignItems: "center",
   },

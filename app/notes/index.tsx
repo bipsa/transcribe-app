@@ -16,7 +16,10 @@ const Item: React.FC<{
   onPress: (d: TranscriptionData) => void;
 }> = ({ data, onPress }) => (
   <TouchableOpacity style={styles.item} onPress={() => onPress(data)}>
-    <Text style={styles.title}>{data.name}</Text>
+    <Text style={styles.name}>{data.name}</Text>
+    <Text style={styles.title} numberOfLines={2}>
+      {data.transcription || ""}
+    </Text>
   </TouchableOpacity>
 );
 
@@ -55,14 +58,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   item: {
-    backgroundColor: "#ccc",
+    backgroundColor: "#DFDFDF",
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
     borderRadius: 5,
+    gap: 5,
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
+  },
+  name: {
+    fontSize: 16,
     fontWeight: "bold",
   },
   list: {
